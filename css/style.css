@@ -1,0 +1,410 @@
+:root {
+  --navy: #7a1c2e;
+  --navy-dark: #5e1423;
+  --blue: #a8324a;
+  --link-blue: #2563eb;
+  --text: #111;
+  --text-sub: #6b7280;
+  --divider: #d7d9de;
+  --bg: #fff;
+  --search-bg: #e8e9ec;
+  --pink: #e91e8c;
+  --purple: #7b1fd1;
+  --prev-gray: #b08d96;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  height: 100%;
+  background: var(--bg);
+  font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Apple SD Gothic Neo", sans-serif;
+  color: var(--text);
+  overscroll-behavior-y: none;
+}
+
+.hidden { display: none !important; }
+
+.view {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+}
+
+/* ===== 헤더 ===== */
+.app-header {
+  background: var(--navy);
+  color: #fff;
+  padding-top: env(safe-area-inset-top);
+  height: calc(56px + env(safe-area-inset-top));
+  display: flex;
+  align-items: center;
+  padding-left: 16px;
+  padding-right: 10px;
+  flex-shrink: 0;
+  border-bottom: 4px solid var(--navy);
+}
+
+.app-header .logo { height: 26px; }
+
+.app-header .icon-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.app-header .icon-btn svg { width: 26px; height: 26px; }
+.app-header .menu-btn { margin-left: auto; }
+
+.song-header { gap: 2px; padding-left: 4px; }
+.song-header .back-btn { flex-shrink: 0; }
+.song-header .song-title {
+  font-size: 19px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+}
+.song-header .menu-btn { margin-left: 0; }
+
+/* ===== 검색 ===== */
+.search-wrap {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--divider);
+  flex-shrink: 0;
+}
+.search-box {
+  background: var(--search-bg);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  height: 42px;
+}
+.search-box .search-icon { width: 20px; height: 20px; color: #8a8f98; flex-shrink: 0; }
+.search-box input {
+  flex: 1;
+  border: none;
+  background: none;
+  outline: none;
+  font-size: 17px;
+  padding: 0 8px;
+  color: var(--text);
+}
+.search-box input::placeholder { color: #9aa0a8; }
+.search-box input::-webkit-search-cancel-button { display: none; }
+.clear-btn {
+  border: none;
+  background: #c4c8cf;
+  color: #fff;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.search-box.has-text .clear-btn { display: flex; }
+
+/* ===== 곡 목록 ===== */
+.list-area {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 0 14px calc(30px + env(safe-area-inset-bottom));
+}
+.range-label {
+  color: var(--text-sub);
+  font-size: 20px;
+  font-weight: 600;
+  padding: 14px 2px 6px;
+}
+.song-list { list-style: none; }
+.song-list li {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 15px 2px;
+  border-bottom: 1px solid var(--divider);
+  cursor: pointer;
+}
+.song-list li:active { background: #f3f4f6; }
+.song-list .num {
+  color: var(--blue);
+  font-size: 22px;
+  font-weight: 600;
+  min-width: 58px;
+  text-align: center;
+  flex-shrink: 0;
+}
+.song-list .info { min-width: 0; }
+.song-list .title {
+  font-size: 21px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.song-list .first-line {
+  color: var(--text-sub);
+  font-size: 16px;
+  margin-top: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.empty-msg {
+  text-align: center;
+  color: var(--text-sub);
+  padding: 60px 20px;
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+/* ===== 우측 빠른 이동 ===== */
+.quick-jump {
+  position: fixed;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-40%);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  z-index: 5;
+}
+.quick-jump button {
+  background: none;
+  border: none;
+  color: var(--link-blue);
+  font-size: 16px;
+  font-weight: 600;
+  padding: 2px 8px;
+  cursor: pointer;
+  text-align: right;
+}
+
+/* ===== 곡 보기: 악보 ===== */
+.sheet-area {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  background: #fff;
+  padding-bottom: calc(110px + env(safe-area-inset-bottom));
+}
+.sheet-area img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.sheet-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  color: var(--text-sub);
+  padding: 90px 24px;
+  text-align: center;
+  line-height: 1.8;
+}
+.sheet-placeholder svg { width: 64px; height: 64px; color: #c4c8cf; }
+
+/* ===== 곡 보기: 가사 ===== */
+.lyrics-area {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 28px 18px calc(130px + env(safe-area-inset-bottom));
+}
+.lyrics-text {
+  text-align: center;
+  font-size: 24px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  word-break: normal;
+  overflow-wrap: break-word;
+}
+
+/* ===== 플로팅 버튼 ===== */
+.fab {
+  position: fixed;
+  right: 18px;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  border: none;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 3px 10px rgba(0,0,0,.25);
+  z-index: 10;
+}
+.fab svg { width: 27px; height: 27px; }
+.fab-toggle { bottom: calc(168px + env(safe-area-inset-bottom)); background: var(--pink); }
+.fab-bookmark { bottom: calc(96px + env(safe-area-inset-bottom)); background: var(--purple); }
+.fab-bookmark.active #bookmark-star { fill: #ffd944; stroke: #ffd944; }
+
+/* ===== 하단 내비 ===== */
+.nav-circle {
+  position: fixed;
+  bottom: calc(20px + env(safe-area-inset-bottom));
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  border: none;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 3px 10px rgba(0,0,0,.25);
+  z-index: 10;
+}
+.nav-circle svg { width: 28px; height: 28px; }
+.nav-prev { left: 18px; background: var(--prev-gray); }
+.nav-next { right: 18px; background: var(--navy-dark); }
+.nav-circle:disabled { opacity: .35; }
+
+/* ===== 글자 크기 슬라이더 ===== */
+.font-slider-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 12px 96px calc(16px + env(safe-area-inset-bottom));
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255,255,255,.92);
+  backdrop-filter: blur(6px);
+  z-index: 9;
+}
+.font-label {
+  color: var(--navy);
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1;
+}
+.font-label small { font-size: 16px; font-weight: 700; }
+#font-slider {
+  flex: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--blue);
+  outline: none;
+}
+#font-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--blue);
+}
+
+/* ===== 드로어 ===== */
+.drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(160,170,190,.45);
+  z-index: 20;
+}
+.drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(78%, 340px);
+  background: #f6f7f9;
+  z-index: 21;
+  transform: translateX(100%);
+  transition: transform .25s ease;
+  display: flex;
+  flex-direction: column;
+  box-shadow: -4px 0 18px rgba(0,0,0,.18);
+}
+.drawer.open { transform: translateX(0); }
+.drawer-head {
+  background: var(--navy);
+  padding: calc(40px + env(safe-area-inset-top)) 28px 36px;
+}
+.drawer-head .logo { height: 30px; }
+.drawer-menu { display: flex; flex-direction: column; background: #fff; }
+.drawer-menu button {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  background: #fff;
+  border: none;
+  border-bottom: 1px solid var(--divider);
+  padding: 24px 28px;
+  font-size: 22px;
+  cursor: pointer;
+  text-align: left;
+}
+.drawer-menu button strong { font-weight: 700; color: #1f2937; }
+.drawer-menu button span { color: #9aa0a8; font-size: 19px; font-weight: 400; }
+.drawer-menu button:active { background: #eef0f3; }
+
+/* ===== 서브 화면 (즐겨찾기/히스토리/소개/설정) ===== */
+.sub-area { padding-top: 4px; }
+.about-box { padding: 28px 8px; line-height: 1.9; font-size: 17px; }
+.about-box h2 { color: var(--navy); margin-bottom: 12px; font-size: 22px; }
+.about-box p { margin-bottom: 14px; color: #374151; }
+
+.settings-list { list-style: none; }
+.settings-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 20px 4px;
+  border-bottom: 1px solid var(--divider);
+  font-size: 18px;
+}
+.settings-list .danger { color: #dc2626; }
+.settings-list button {
+  border: 1px solid var(--divider);
+  background: #fff;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 15px;
+  cursor: pointer;
+  color: #374151;
+}
+
+/* 즐겨찾기 항목의 별 제거 버튼 */
+.song-list .row-action {
+  margin-left: auto;
+  background: none;
+  border: none;
+  color: #c4a000;
+  cursor: pointer;
+  padding: 6px;
+  flex-shrink: 0;
+}
+.song-list .row-action svg { width: 24px; height: 24px; }
+
+@media (min-width: 700px) {
+  .view, .font-slider-bar { max-width: 560px; left: 0; right: 0; margin: 0 auto; }
+  .drawer { right: calc(50% - 280px); }
+  .quick-jump { right: calc(50% - 276px); }
+  .fab, .nav-next { right: calc(50% - 262px); }
+  .nav-prev { left: calc(50% - 262px); }
+}

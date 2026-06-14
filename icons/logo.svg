@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 64" width="360" height="64">
+  <style>
+    .t { font-family: "Hiragino Mincho ProN", "Yu Mincho", serif; font-weight: 700; fill: #ffffff; }
+  </style>
+  <text x="6" y="46" class="t" font-size="40" letter-spacing="4">韓日讃頌歌</text>
+  <path d="M8 56 C 90 50, 270 50, 352 56" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#7a1c2e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="韓日讃頌歌">
+<title>韓日讃頌歌</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ===== 홈 화면 ===== -->
+<div id="view-home" class="view">
+  <header class="app-header">
+    <img src="icons/logo.svg" alt="韓日讃頌歌" class="logo">
+    <button class="icon-btn menu-btn" id="home-menu-btn" aria-label="メニュー">
+      <svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+    </button>
+  </header>
+
+  <div class="search-wrap">
+    <div class="search-box">
+      <svg class="search-icon" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15.5 15.5L21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      <input type="search" id="search-input" placeholder="番号・タイトル・韓国語タイトルで検索" autocomplete="off" enterkeyhint="search">
+      <button class="clear-btn" id="search-clear" aria-label="クリア">&times;</button>
+    </div>
+  </div>
+
+  <main class="list-area" id="list-area">
+    <div class="range-label" id="range-label">1 ~ 50</div>
+    <ul class="song-list" id="song-list"></ul>
+  </main>
+
+  <!-- 우측 빠른 이동 인덱스 -->
+  <nav class="quick-jump" id="quick-jump"></nav>
+</div>
+
+<!-- ===== 곡 보기 화면 (악보/가사) ===== -->
+<div id="view-song" class="view hidden">
+  <header class="app-header song-header">
+    <button class="icon-btn back-btn" id="song-back-btn" aria-label="戻る">
+      <svg viewBox="0 0 24 24"><path d="M15 4l-8 8 8 8" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <h1 class="song-title" id="song-title"></h1>
+    <button class="icon-btn" id="song-search-btn" aria-label="検索">
+      <svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15.5 15.5L21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+    <button class="icon-btn menu-btn" id="song-menu-btn" aria-label="メニュー">
+      <svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+    </button>
+  </header>
+
+  <!-- 악보 모드 -->
+  <main class="sheet-area" id="sheet-area">
+    <div id="sheet-images"></div>
+  </main>
+
+  <!-- 가사 모드 -->
+  <main class="lyrics-area hidden" id="lyrics-area">
+    <div class="lyrics-text" id="lyrics-text"></div>
+  </main>
+
+  <!-- 플로팅 버튼들 -->
+  <button class="fab fab-toggle" id="fab-toggle" aria-label="歌詞/楽譜">
+    <svg id="fab-toggle-doc" viewBox="0 0 24 24"><path d="M6 2h9l5 5v15H6z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M9 12h8M9 16h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    <svg id="fab-toggle-note" viewBox="0 0 24 24" class="hidden"><path d="M9 18.5V5l10-2v12.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="6.5" cy="18.5" r="2.7" fill="currentColor"/><circle cx="16.5" cy="15.5" r="2.7" fill="currentColor"/></svg>
+  </button>
+  <button class="fab fab-bookmark" id="fab-bookmark" aria-label="お気に入り">
+    <svg viewBox="0 0 24 24"><path id="bookmark-star" d="M12 3.2l2.5 5.4 5.9.6-4.4 4 1.2 5.8L12 16l-5.2 3 1.2-5.8-4.4-4 5.9-.6z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+  </button>
+
+  <!-- 하단 내비게이션 -->
+  <button class="nav-circle nav-prev" id="nav-prev" aria-label="前の曲">
+    <svg viewBox="0 0 24 24"><path d="M14.5 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+  <button class="nav-circle nav-next" id="nav-next" aria-label="次の曲">
+    <svg viewBox="0 0 24 24"><path d="M9.5 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+
+  <!-- 가사 모드: 글자 크기 슬라이더 -->
+  <div class="font-slider-bar hidden" id="font-slider-bar">
+    <span class="font-label">A<small>A</small></span>
+    <input type="range" id="font-slider" min="14" max="34" step="1">
+  </div>
+</div>
+
+<!-- ===== 즐겨찾기 / 히스토리 / 앱소개 / 설정 (서브 화면) ===== -->
+<div id="view-sub" class="view hidden">
+  <header class="app-header song-header">
+    <button class="icon-btn back-btn" id="sub-back-btn" aria-label="戻る">
+      <svg viewBox="0 0 24 24"><path d="M15 4l-8 8 8 8" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <h1 class="song-title" id="sub-title"></h1>
+    <button class="icon-btn menu-btn" id="sub-menu-btn" aria-label="メニュー">
+      <svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+    </button>
+  </header>
+  <main class="list-area sub-area" id="sub-content"></main>
+</div>
+
+<!-- ===== 사이드 드로어 메뉴 ===== -->
+<div class="drawer-overlay hidden" id="drawer-overlay"></div>
+<aside class="drawer" id="drawer">
+  <div class="drawer-head">
+    <img src="icons/logo.svg" alt="韓日讃頌歌" class="logo">
+  </div>
+  <nav class="drawer-menu">
+    <button data-route="home"><strong>韓日讃頌歌</strong><span>Home</span></button>
+    <button data-route="bookmarks"><strong>お気に入り</strong><span>Bookmark</span></button>
+    <button data-route="history"><strong>履歴</strong><span>History</span></button>
+    <button data-route="about"><strong>アプリ紹介</strong><span>Information</span></button>
+    <button data-route="settings"><strong>設定</strong><span>Setting</span></button>
+  </nav>
+</aside>
+
+<script src="js/app.js"></script>
+</body>
+</html>
