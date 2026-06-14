@@ -1,5 +1,5 @@
 /* 韓日讃頌歌 service worker */
-const VERSION = 'v2';
+const VERSION = 'v3';
 const SHELL_CACHE = `shell-${VERSION}`;
 const SHEET_CACHE = `sheets-${VERSION}`;
 
